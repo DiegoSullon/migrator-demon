@@ -1,0 +1,6 @@
+psycopg2-binary
+python-dotenv
+schedule
+requests
+boto3
+bcrypt
