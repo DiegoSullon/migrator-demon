@@ -14,25 +14,25 @@ class UserEntity(object):
             self.logger.error('Error getting USER_ID')
             return None
 
-    def get_user_code(self):
+    def get_user_email(self):
         try:
-            return self.getPayload()[const.USER_CODE]
+            return self.getPayload()[const.USER_EMAIL]
         except:
-            self.logger.error('Error getting USER_CODE')
+            self.logger.error('Error getting USER_EMAIL')
             return None
 
     def get_user_name(self):
         try:
-            return self.getPayload()[const.USER_NAME]
+            return self.getPayload()[const.USER_USERNAME]
         except:
-            self.logger.error('Error getting USER_NAME')
+            self.logger.error('Error getting USER_USERNAME')
             return None
 
     def get_partner_id(self):
         try:
-            return self.getPayload()[const.PARTNER_ID]
+            return self.getPayload()[const.USER_SELLER_ID]
         except:
-            self.logger.error('Error getting PARTNER_ID')
+            self.logger.error('Error getting USER_SELLER_ID')
             return None
 
     def set_user_password(self, data):
