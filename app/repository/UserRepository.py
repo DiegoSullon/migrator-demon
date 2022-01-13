@@ -13,7 +13,7 @@ class UserRepository(object):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.dbManager = dbManager
 
-    # id, ruc, business_name, shop_name, trade_name, phone, address, country_id, state_id, county_id, city_id, email, branch, created_at, updated_at, "type", create_user
+    # (id, username, "password", role_id, user_status_id, email, seller_id, save_session) 
     def insert_many(self, users: list[UserEntity]):
 
         inserts: list[tuple] = []
