@@ -31,7 +31,7 @@ class ShopEntity(object):
 
     def get_user_roleId(self):
         try:
-            return 1
+            return 2
         except:
             self.logger.error('Error getting user_roleId')
             return None
@@ -45,7 +45,7 @@ class ShopEntity(object):
 
     def get_user_save_session(self):
         try:
-            return True
+            return False
         except:
             self.logger.error('Error getting user_save_session')
             return False

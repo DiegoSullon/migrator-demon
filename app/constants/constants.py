@@ -22,6 +22,8 @@ USER_STATUS_ID = 'user_status_id'
 USER_EMAIL = 'email'
 USER_FIRSTNAME= 'first_names'
 USER_LASTNAME= 'last_names'
+USER_CREATED_AT = 'created_at'
+
 USER_SELLER_ID = 'seller_id'
 USER_SAVE_SESSION = 'save_session'
 
