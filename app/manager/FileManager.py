@@ -1,14 +1,14 @@
 import os
 from time import process_time_ns
 import app.constants.constants as const
-from app.entities.UserEntity import UserEntity
+from app.entities.ShopEntity import ShopEntity
 from app.repository.DBManager import DBManager
 from app.repository.UserRepository import UserRepository
 import app.utils.LogHandler as logging
 import csv
 
 
-class UserManager(object):
+class FileManager(object):
 
     def __init__(self, dbManager: DBManager):
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -25,10 +25,10 @@ class UserManager(object):
     def readCSV(self):
         try:
             self.logger.info('Looking for user file...')
-            users_to_insert: list[UserEntity] = []
+            users_to_insert: list[ShopEntity] = []
             resultDict = []
             user_emails = []
-            with open(f'{const.ROOT_PATH}/app/input/users.csv') as f:
+            with open(f'{const.ROOT_PATH}/app/input/shops.csv') as f:
                 for row in csv.DictReader(f, skipinitialspace=True, delimiter=';'):
                     newDict = {}
                     for k, v in row.items():
@@ -41,7 +41,7 @@ class UserManager(object):
                         user_emails.append(newDict[const.USER_EMAIL])
 
             for result in resultDict:
-                newUser = UserEntity(result)
+                newUser = ShopEntity(result)
                 users_to_insert.append(newUser)
 
             return users_to_insert

@@ -1,4 +1,4 @@
-from app.manager.UserManager import UserManager
+from app.manager.FileManager import FileManager
 import app.utils.LogHandler as logging
 from time import sleep
 from app.repository.DBManager import DBManager
@@ -18,12 +18,10 @@ class Worker(object):
         self.dbManager.initPool()
         self.dbManager.connect()
 
-        userManager = UserManager(self.dbManager)
+        fileManager = FileManager(self.dbManager)
 
-        userCreateFrequency = 5
-        sellerCreateFrequency = 5
-        schedule.every(userCreateFrequency).seconds.do(userManager.execute)
-        # schedule.every(sellerCreateFrequency).seconds.do(manager.execute)
+        createFrequency = 5
+        schedule.every(createFrequency).seconds.do(fileManager.execute)
 
         while True:
             schedule.run_pending()

@@ -1,4 +1,4 @@
-from app.entities.UserEntity import UserEntity
+from app.entities.ShopEntity import ShopEntity
 from app.repository.DBManager import DBManager
 from app.utils.Console import printProgressBar
 import app.utils.LogHandler as logging
@@ -14,7 +14,7 @@ class UserRepository(object):
         self.dbManager = dbManager
 
     # (id, username, "password", role_id, user_status_id, email, seller_id, save_session) 
-    def insert_many(self, users: list[UserEntity]):
+    def insert_many(self, users: list[ShopEntity]):
 
         inserts: list[tuple] = []
         columns: list = [const.USER_ID ,const.USER_USERNAME, const.USER_PASSWORD, const.USER_ROLE_ID, const.USER_STATUS_ID,
