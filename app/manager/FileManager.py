@@ -31,6 +31,8 @@ class FileManager(object):
             shopRepository.insert_shops_users(users_to_relation)
             shopRepository.insert_shops_categories(shops_to_relation)
 
+            shopRepository.insert_shops_root_directory(shops_to_insert)
+
             
 
         self.dbManager.close()
