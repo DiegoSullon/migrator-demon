@@ -21,24 +21,23 @@ class FileManager(object):
         userRepository = UserRepository(self.dbManager)
         shopRepository = ShopRepository(self.dbManager)
 
-        users_to_insert, shops_to_insert = self.readCSV()
+        users_to_insert, users_to_relation = self.readUsersCSV()
+        shops_to_insert = self.readShopsCSV()
         
         userRepository.insert_many(users_to_insert)
         shopRepository.insert_many(shops_to_insert)
+        shopRepository.insert_shops_users(users_to_relation)
 
         self.dbManager.close()
 
-    def readCSV(self):
-        users_to_insert: list[ShopEntity] = []
+    def readShopsCSV(self):
         shops_to_insert: list[ShopEntity] = []
         try:
-            self.logger.info('Looking for shop file...')
+            self.logger.info('Looking for shops file...')
 
             filePath = f'{const.ROOT_PATH}/app/input/shops.csv'
             
-            resultDictUsers = []
             resultDictShops = []
-            user_emails = []
             shop_ids = []
 
             with open(filePath) as f:
@@ -53,6 +52,39 @@ class FileManager(object):
                     if const.SHOP_ID in newDict:
                         shop_ids.append(newDict[const.SHOP_ID])
 
+            for result in resultDictShops:
+                newShop = ShopEntity(result)
+                shops_to_insert.append(newShop)
+
+            sleep(1)
+            if os.path.exists(filePath):
+                os.remove(filePath)
+            return shops_to_insert
+        except Exception as e:
+            self.logger.warning('There is not shops file to read')
+            print(e)
+            return shops_to_insert
+        
+    def readUsersCSV(self):
+        users_to_insert: list[ShopEntity] = []
+        users_to_relation: list[ShopEntity] = []
+        try:
+            self.logger.info('Looking for users file...')
+
+            filePath = f'{const.ROOT_PATH}/app/input/users.csv'
+            
+            resultDictUsers = []
+            resultDictRelation = []
+            user_emails = []
+
+            with open(filePath) as f:
+                for row in csv.DictReader(f, skipinitialspace=True, delimiter=';'):
+                    newDict = {}
+                    for k, v in row.items():
+                        newDict[k] = str(v)
+
+                    resultDictRelation.append(newDict)
+
                     # not append duplicate user_codes
                     if const.USER_EMAIL in newDict and newDict[const.USER_EMAIL] not in user_emails:
                         resultDictUsers.append(newDict)
@@ -63,15 +95,15 @@ class FileManager(object):
                 newUser = ShopEntity(result)
                 users_to_insert.append(newUser)
 
-            for result in resultDictShops:
+            for result in resultDictRelation:
                 newShop = ShopEntity(result)
-                shops_to_insert.append(newShop)
+                users_to_relation.append(newShop)
 
             sleep(1)
             if os.path.exists(filePath):
                 os.remove(filePath)
-            return users_to_insert, shops_to_insert
+            return users_to_insert, users_to_relation
         except Exception as e:
-            self.logger.warning('There are not files to read')
+            self.logger.warning('There is not users file to read')
             print(e)
-            return users_to_insert, shops_to_insert
+            return users_to_insert, users_to_relation

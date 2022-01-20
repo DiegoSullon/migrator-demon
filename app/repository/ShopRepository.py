@@ -38,3 +38,27 @@ class ShopRepository(object):
             self.logger.info(f'Inserting {len(inserts)} shops....')
             print('----')
             self.dbManager.insertMany(const.SHOP_TABLE, columns, inserts)
+    
+    def insert_shops_users(self, shops: list[ShopEntity]):
+        if len(shops) >=1:
+            dictUserOrder = {}
+            for shop in shops:
+                # Get users id
+                UserColumns = [const.USER_ID]
+                res = self.dbManager.getMany(const.USER_TABLE, UserColumns, equalParams={const.USER_EMAIL: shop.get_user_email()})
+                user_id = res[0][0] if len(res) >=1 else None
+
+                order = dictUserOrder[user_id] if user_id in dictUserOrder else 0
+                dictUserOrder[user_id] = order + 1
+
+                if user_id:
+                    # Insert relation
+                    self.logger.info(f'user_id: {user_id}')
+                    columns = [const.USER_SHOPS_USER_ID, const.USER_SHOPS_SELLER_ID, const.USER_SHOPS_STATE, const.USER_SHOPS_CREATED_AT, const.USER_SHOPS_UPDATED_AT, const.USER_SHOPS_ORDER, const.USER_SHOPS_UPDATE_USER]
+                    dt = datetime.now(timezone.utc)
+
+                    inserts = [(user_id, shop.get_shop_id(), 1, dt, dt, order, 0)]
+                    self.dbManager.insertMany(const.USER_SHOPS_TABLE, columns, inserts)
+
+
+

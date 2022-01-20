@@ -70,3 +70,14 @@ LAST_SESSION = 'last_session'
 
 
 PARTNER_ID = 'partner_id'
+
+
+#  USER_SHOPS
+USER_SHOPS_TABLE = '"TAS_SELLER_SHOP"'
+USER_SHOPS_USER_ID = 'seller_id'
+USER_SHOPS_SELLER_ID = 'shop_id'
+USER_SHOPS_STATE = 'state'
+USER_SHOPS_CREATED_AT = 'created_at'
+USER_SHOPS_UPDATED_AT = 'updated_at'
+USER_SHOPS_ORDER = '"order"'
+USER_SHOPS_UPDATE_USER = 'update_user'

@@ -62,7 +62,7 @@ class DBManager(object):
 
             cursor.close()
             self.logger.debug(f'First response: {response}')
-            self.logger.info(f'obtained rows: {len(response)}')
+            self.logger.debug(f'obtained rows: {len(response)}')
             return response
         except Exception as error:
             self.logger.error(f'Error db getMany: {error}')
@@ -101,7 +101,7 @@ class DBManager(object):
                 equals += f"{p} = '{equalParams[p]}' AND "
 
         whereQuery = f'WHERE {equals}' if equalParams else ''
-        query=f'SELECT {columnsQuery} FROM "{table}" {whereQuery}'
+        query=f'SELECT {columnsQuery} FROM {table} {whereQuery}'
         return query
     
     def updateOne(self, table: str, idColumn: str, updates: dict = {}, id: str = ''):
