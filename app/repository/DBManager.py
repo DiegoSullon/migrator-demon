@@ -175,6 +175,7 @@ class DBManager(object):
 
             cursor.close()
             self.logger.info(f"Records Inserts: {row_count}")
+            return True
 
         except Exception as error:
             self.logger.info(f'Error db insertMany: {error}')
