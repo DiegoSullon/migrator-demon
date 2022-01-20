@@ -24,7 +24,7 @@ class FileManager(object):
         users_to_insert, users_to_relation = self.readUsersCSV()
         shops_to_insert, shops_to_relation = self.readShopsCSV()
         
-        usersInserted = userRepository.insert_many(users_to_insert)
+        usersInserted = userRepository.insert_many(users_to_insert, users_to_relation)
         shopsInserted = shopRepository.insert_many(shops_to_insert)
 
         if usersInserted and shopsInserted:

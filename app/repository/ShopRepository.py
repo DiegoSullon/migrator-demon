@@ -63,7 +63,7 @@ class ShopRepository(object):
 
                     order = 0
                     for shopId in dictUserOrder[shop.get_user_email()]:
-                        if int(shop.get_shop_id()) < shopId:
+                        if int(shop.get_shop_id()) > shopId:
                             order += 1
 
                     if user_id:
@@ -117,13 +117,9 @@ class ShopRepository(object):
 
     def insert_shops_root_directory(self, shops: list[ShopEntity]):
         try:
-            print(0)
             if len(shops) >= 1:
-                print(1)
                 inserts: list[tuple] = []
-                print(2)
                 for shop in shops:
-                    print(3)
 
                     columns = [const.DIRECTORY_SHOP_PARTNER_ID, const.DIRECTORY_SHOP_IDENTIFIER,
                                const.DIRECTORY_SHOP_PATH, const.DIRECTORY_SHOP_CREATED_USER, const.DIRECTORY_SHOP_CREATED_DATE, const.DIRECTORY_SHOP_LAST_UPDATE]
@@ -132,7 +128,6 @@ class ShopRepository(object):
                     inserts.append(
                         (shop.get_shop_id(), shop.get_shop_id(), '/', 0, dt, dt))
 
-                print(4)
                 if len(inserts) >= 1:
                     self.dbManager.insertMany(
                         const.DIRECTORY_SHOP_TABLE, columns, inserts)
