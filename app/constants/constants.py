@@ -20,8 +20,8 @@ USER_PASSWORD = 'password'
 USER_ROLE_ID = 'role_id'
 USER_STATUS_ID = 'user_status_id'
 USER_EMAIL = 'email'
-USER_FIRSTNAME= 'first_names'
-USER_LASTNAME= 'last_names'
+USER_FIRSTNAME = 'first_names'
+USER_LASTNAME = 'last_names'
 USER_CREATED_AT = 'created_at'
 
 USER_SELLER_ID = 'seller_id'
@@ -60,7 +60,7 @@ SHOP_UPDATED_AT = 'updated_at'
 SHOP_BRANCH = 'branch'
 SHOP_TRADE_NAME = 'trade_name'
 SHOP_CREATE_USER = 'create_user'
-
+SHOP_CATEGORY = 'category_name'
 
 # Monitores
 CREATE_USER = 'create_user'
@@ -81,3 +81,16 @@ USER_SHOPS_CREATED_AT = 'created_at'
 USER_SHOPS_UPDATED_AT = 'updated_at'
 USER_SHOPS_ORDER = '"order"'
 USER_SHOPS_UPDATE_USER = 'update_user'
+
+# Category
+CATEGORY_TABLE = '"CATEGORY"'
+CATEGORY_ID = 'category_id'
+CATEGORY_NAME = 'name'
+
+# PARTNER_CATEGORY
+PARTNER_CATEGORY_TABLE = '"PARTNER_CATEGORY"'
+PARTNER_CATEGORY_PARTNER_ID = 'partner_id'
+PARTNER_CATEGORY_CATEGORY_ID = 'category_id'
+PARTNER_CATEGORY_ORDER = '"order"'
+PARTNER_CATEGORY_UPDATE_USER = 'update_user'
+PARTNER_CATEGORY_LAST_UPDATE = 'last_update'

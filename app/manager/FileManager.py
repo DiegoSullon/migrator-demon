@@ -22,18 +22,22 @@ class FileManager(object):
         shopRepository = ShopRepository(self.dbManager)
 
         users_to_insert, users_to_relation = self.readUsersCSV()
-        shops_to_insert = self.readShopsCSV()
+        shops_to_insert, shops_to_relation = self.readShopsCSV()
         
         usersInserted = userRepository.insert_many(users_to_insert)
         shopsInserted = shopRepository.insert_many(shops_to_insert)
-        
+
         if usersInserted and shopsInserted:
             shopRepository.insert_shops_users(users_to_relation)
+            shopRepository.insert_shops_categories(shops_to_relation)
+
+            
 
         self.dbManager.close()
 
     def readShopsCSV(self):
         shops_to_insert: list[ShopEntity] = []
+        shops_to_relation: list[ShopEntity] = []
         try:
             self.logger.info('Looking for shops file...')
 
@@ -41,12 +45,15 @@ class FileManager(object):
             
             resultDictShops = []
             shop_ids = []
+            resultDictRelation = []
 
             with open(filePath) as f:
                 for row in csv.DictReader(f, skipinitialspace=True, delimiter=';'):
                     newDict = {}
                     for k, v in row.items():
                         newDict[k] = str(v)
+
+                    resultDictRelation.append(newDict)
 
                     # not append duplicate mrkl_shop_id
                     if const.SHOP_ID in newDict and newDict[const.SHOP_ID] not in shop_ids:
@@ -57,15 +64,19 @@ class FileManager(object):
             for result in resultDictShops:
                 newShop = ShopEntity(result)
                 shops_to_insert.append(newShop)
+            
+            for result in resultDictRelation:
+                newShop = ShopEntity(result)
+                shops_to_relation.append(newShop)
 
             sleep(1)
             if os.path.exists(filePath):
                 os.remove(filePath)
-            return shops_to_insert
+            return shops_to_insert, shops_to_relation
         except Exception as e:
             self.logger.warning('There is not shops file to read')
             print(e)
-            return shops_to_insert
+            return shops_to_insert, shops_to_relation
         
     def readUsersCSV(self):
         users_to_insert: list[ShopEntity] = []

@@ -44,25 +44,63 @@ class ShopRepository(object):
             return False
     
     def insert_shops_users(self, shops: list[ShopEntity]):
-        if len(shops) >=1:
-            dictUserOrder = {}
-            for shop in shops:
-                # Get users id
-                UserColumns = [const.USER_ID]
-                res = self.dbManager.getMany(const.USER_TABLE, UserColumns, equalParams={const.USER_EMAIL: shop.get_user_email()})
-                user_id = res[0][0] if len(res) >=1 else None
+        try:
+            if len(shops) >=1:
+                inserts: list[tuple] = []
+                dictUserOrder:dict[list[int]] = {}
+                for shop in shops:
+                    currentShopList = dictUserOrder[shop.get_user_email()] if shop.get_user_email() in dictUserOrder else []
+                    dictUserOrder[shop.get_user_email()] = currentShopList + [int(shop.get_shop_id())]
+                for shop in shops:
+                    # Get users id
+                    UserColumns = [const.USER_ID]
+                    res = self.dbManager.getMany(const.USER_TABLE, UserColumns, equalParams={const.USER_EMAIL: shop.get_user_email()})
+                    user_id = res[0][0] if len(res) >=1 else None
 
-                order = dictUserOrder[user_id] if user_id in dictUserOrder else 0
-                dictUserOrder[user_id] = order + 1
+                    order =  0
+                    for shopId in dictUserOrder[shop.get_user_email()]:
+                        if int(shop.get_shop_id()) < shopId:
+                            order += 1
 
-                if user_id:
-                    # Insert relation
-                    self.logger.info(f'user_id: {user_id}')
-                    columns = [const.USER_SHOPS_USER_ID, const.USER_SHOPS_SELLER_ID, const.USER_SHOPS_STATE, const.USER_SHOPS_CREATED_AT, const.USER_SHOPS_UPDATED_AT, const.USER_SHOPS_ORDER, const.USER_SHOPS_UPDATE_USER]
-                    dt = datetime.now(timezone.utc)
+                    if user_id:
+                        # Insert relation
+                        self.logger.info(f'shop: {shop.get_shop_id()} - user_id: {user_id}')
+                        columns = [const.USER_SHOPS_USER_ID, const.USER_SHOPS_SELLER_ID, const.USER_SHOPS_STATE, const.USER_SHOPS_CREATED_AT, const.USER_SHOPS_UPDATED_AT, const.USER_SHOPS_ORDER, const.USER_SHOPS_UPDATE_USER]
+                        dt = datetime.now(timezone.utc)
 
-                    inserts = [(user_id, shop.get_shop_id(), 1, dt, dt, order, 0)]
+                        inserts.append((user_id, shop.get_shop_id(), 1, dt, dt, order, 0))
+                if len(inserts) >=1:
                     self.dbManager.insertMany(const.USER_SHOPS_TABLE, columns, inserts)
+        except Exception as e:
+            self.logger.error(f'Error insert_shops_users: {e}')
+    
+    def insert_shops_categories(self, shops: list[ShopEntity]):
+        try:
+            if len(shops) >=1:
+                inserts: list[tuple] = []
+                dictCategoryOrder = {}
+                for shop in shops:
+                    # Get users id
+                    CategoryColumns = [const.CATEGORY_ID]
+                    res = self.dbManager.getMany(const.CATEGORY_TABLE, CategoryColumns, equalParams={const.CATEGORY_NAME: shop.get_shop_category()})
+                    category_id = res[0][0] if len(res) >=1 else None
+
+                    order = dictCategoryOrder[category_id] if category_id in dictCategoryOrder else 0
+                    dictCategoryOrder[category_id] = order + 1
+
+                    if category_id:
+                        # Insert relation
+                        self.logger.info(f'shop: {shop.get_shop_id()} - category_id: {category_id}')
+                        columns = [const.PARTNER_CATEGORY_PARTNER_ID, const.PARTNER_CATEGORY_CATEGORY_ID, const.PARTNER_CATEGORY_ORDER, const.PARTNER_CATEGORY_UPDATE_USER, const.PARTNER_CATEGORY_LAST_UPDATE]
+                        dt = datetime.now(timezone.utc)
+
+                        inserts.append((shop.get_shop_id(), category_id, order, 0, dt))
+                        
+                if len(inserts) >=1:
+                    self.dbManager.insertMany(const.PARTNER_CATEGORY_TABLE, columns, inserts)
+
+        except Exception as e:
+            self.logger.error(f'Error insert_shops_categories: {e}')
 
 
 

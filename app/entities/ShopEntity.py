@@ -79,6 +79,13 @@ class ShopEntity(object):
             self.logger.error('Error getting SHOP_NAME')
             return None
 
+    def get_shop_category(self):
+        try:
+            return str(self.getPayload()[const.SHOP_CATEGORY]).upper().strip()
+        except:
+            self.logger.error('Error getting SHOP_NAME')
+            return None
+
     def get_shop_type(self):
         try:
             # S: Seller
