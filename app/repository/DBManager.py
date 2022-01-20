@@ -1,4 +1,5 @@
 
+from distutils.sysconfig import customize_compiler
 import app.utils.LogHandler as logging
 import app.constants.envargs as env
 import sys
@@ -159,6 +160,7 @@ class DBManager(object):
             self.logger.info(f'Error db updateMany: {error}')
             return None
     def insertMany(self, table: str, columns: list = [], data: list[tuple] = []):
+        cursor = None
         try:
             if(data==[]): return None
 
@@ -175,5 +177,8 @@ class DBManager(object):
             self.logger.info(f"Records Inserts: {row_count}")
 
         except Exception as error:
-            self.logger.info(f'Error db updateMany: {error}')
+            self.logger.info(f'Error db insertMany: {error}')
+            self.conn.commit()
+            if(cursor):
+                cursor.close()
             return None

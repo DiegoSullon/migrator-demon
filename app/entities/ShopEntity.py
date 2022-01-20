@@ -17,14 +17,14 @@ class ShopEntity(object):
 
     def get_user_email(self):
         try:
-            return self.getPayload()[const.USER_EMAIL]
+            return str(self.getPayload()[const.USER_EMAIL]).replace(' ','')[:64]
         except:
             self.logger.error('Error getting USER_EMAIL')
             return None
 
     def get_user_name(self):
         try:
-            return self.getPayload()[const.USER_EMAIL]
+            return str(self.getPayload()[const.USER_EMAIL]).replace(' ','')[:64]
         except:
             self.logger.error('Error getting USER_USERNAME')
             return None
@@ -52,14 +52,14 @@ class ShopEntity(object):
 
     def get_user_first_names(self):
         try:
-            return self.getPayload()[const.USER_FIRSTNAME]
+            return str(self.getPayload()[const.USER_FIRSTNAME])[:100]
         except:
             self.logger.error('Error getting user_first_names')
             return None
 
     def get_user_last_names(self):
         try:
-            return self.getPayload()[const.USER_LASTNAME]
+            return str(self.getPayload()[const.USER_LASTNAME])[:100]
         except:
             self.logger.error('Error getting user_last_names')
             return None
@@ -74,7 +74,7 @@ class ShopEntity(object):
 
     def get_shop_name(self):
         try:
-            return self.getPayload()[const.SHOP_NAME]
+            return str(self.getPayload()[const.SHOP_NAME])[:128]
         except:
             self.logger.error('Error getting SHOP_NAME')
             return None
@@ -100,21 +100,21 @@ class ShopEntity(object):
     
     def get_web_site(self):
         try:
-            return self.getPayload()[const.SHOP_WEB_SITE]
+            return str(self.getPayload()[const.SHOP_WEB_SITE])[:100]
         except:
             self.logger.error('Error getting SHOP_WEB_SITE')
             return None
 
     def get_shop_logo(self):
         try:
-            return self.getPayload()[const.SHOP_LOGO]
+            return str(self.getPayload()[const.SHOP_LOGO])[:100]
         except:
             self.logger.error('Error getting SHOP_LOGO')
             return None
 
-    def get_shop_logo(self):
+    def get_shop_description(self):
         try:
-            return self.getPayload()[const.SHOP_DESCRIPTION]
+            return str(self.getPayload()[const.SHOP_DESCRIPTION])[:1000]
         except:
             self.logger.error('Error getting SHOP_DESCRIPTION')
             return None
@@ -128,28 +128,28 @@ class ShopEntity(object):
 
     def get_business_name(self):
         try:
-            return self.getPayload()[const.SHOP_BUSINESS_NAME]
+           return str(self.getPayload()[const.SHOP_BUSINESS_NAME])[:128]
         except:
             self.logger.error('Error getting SHOP_BUSINESS_NAME')
             return None
 
     def get_shop_ruc(self):
         try:
-            return self.getPayload()[const.SHOP_RUC]
+            return str(self.getPayload()[const.SHOP_RUC]).replace(' ','')[:12]
         except:
             self.logger.error('Error getting SHOP_RUC')
             return None
 
     def get_shop_address(self):
         try:
-            return self.getPayload()[const.SHOP_ADDRESS]
+            return str(self.getPayload()[const.SHOP_ADDRESS])[:512]
         except:
             self.logger.error('Error getting SHOP_ADDRESS')
             return None
 
     def get_shop_address_ref(self):
         try:
-            return self.getPayload()[const.SHOP_ADDRESS_REF]
+            return str(self.getPayload()[const.SHOP_ADDRESS_REF])[:100]
         except:
             self.logger.error('Error getting SHOP_ADDRESS_REF')
             return None
@@ -184,14 +184,14 @@ class ShopEntity(object):
 
     def get_shop_phone(self):
         try:
-            return self.getPayload()[const.SHOP_PHONE]
+            return str(self.getPayload()[const.SHOP_PHONE]).replace(' ','')[:12]
         except:
             self.logger.error('Error getting phone')
             return None
 
     def get_shop_email(self):
         try:
-            return self.getPayload()[const.SHOP_EMAIL]
+            return str(self.getPayload()[const.SHOP_EMAIL]).replace(' ','')[:64]
         except:
             self.logger.error('Error getting email')
             return None
@@ -220,7 +220,7 @@ class ShopEntity(object):
 
     def get_shop_trade_name(self):
         try:
-            return self.getPayload()[const.SHOP_TRADE_NAME]
+            return str(self.getPayload()[const.SHOP_TRADE_NAME])[:128]
         except:
             self.logger.error('Error getting trade_name')
             return None
