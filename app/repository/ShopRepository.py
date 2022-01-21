@@ -3,6 +3,7 @@ from app.repository.DBManager import DBManager
 import app.utils.LogHandler as logging
 import app.constants.constants as const
 from datetime import datetime, timezone
+from app.utils.Console import printProgressBar
 
 
 class ShopRepository(object):
@@ -22,8 +23,6 @@ class ShopRepository(object):
                                  const.SHOP_CREATED_AT, const.SHOP_UPDATED_AT, const.SHOP_BRANCH, const.SHOP_TRADE_NAME, const.SHOP_CREATE_USER]
 
                 dt = datetime.now(timezone.utc)
-
-                shopsLength = len(shops)
 
                 i = 0
                 for s in shops:
@@ -46,7 +45,12 @@ class ShopRepository(object):
 
     def insert_shops_users(self, shops: list[ShopEntity]):
         try:
-            if len(shops) >= 1:
+            shopsLength = len(shops)
+            if shopsLength >= 1:
+                i = 0
+                printProgressBar(0, shopsLength, prefix='Inserting shop_users::',
+                                 suffix='Complete', length=50)
+
                 inserts: list[tuple] = []
                 dictUserOrder: dict[list[int]] = {}
                 for shop in shops:
@@ -76,6 +80,10 @@ class ShopRepository(object):
 
                         inserts.append(
                             (user_id, shop.get_shop_id(), 1, dt, dt, order, 0))
+
+                        printProgressBar(i + 1, shopsLength,
+                                         prefix='Inserting shop_users:', suffix='Complete', length=50)
+                        i += 1
                 if len(inserts) >= 1:
                     self.dbManager.insertMany(
                         const.USER_SHOPS_TABLE, columns, inserts)
@@ -84,7 +92,12 @@ class ShopRepository(object):
 
     def insert_shops_categories(self, shops: list[ShopEntity]):
         try:
-            if len(shops) >= 1:
+            shopsLength = len(shops)
+            if shopsLength >= 1:
+                i = 0
+                printProgressBar(0, shopsLength, prefix='Inserting shop_categories:',
+                                 suffix='Complete', length=50)
+
                 inserts: list[tuple] = []
                 dictCategoryOrder = {}
                 for shop in shops:
@@ -107,6 +120,10 @@ class ShopRepository(object):
 
                         inserts.append(
                             (shop.get_shop_id(), category_id, order, 0, dt))
+
+                        printProgressBar(i + 1, shopsLength,
+                                         prefix='Inserting shop_categories:', suffix='Complete', length=50)
+                        i += 1
 
                 if len(inserts) >= 1:
                     self.dbManager.insertMany(
