@@ -15,7 +15,7 @@ class UserRepository(object):
 
     # Requiered (id, username, "password", role_id, user_status_id, save_session, seller_id, email)
     # Obtained (id, username, "password", role_id, user_status_id, save_session, seller_id, email, first_names, last_names, created_at)
-    def insert_many(self, users: list[ShopEntity], allUsersRecord: list[ShopEntity]):
+    def insert_many(self, users: list[ShopEntity], allUsersRecord: list[ShopEntity], shops_to_relation: list[ShopEntity]):
         try:
             if len(users) >=1:
 
@@ -25,6 +25,13 @@ class UserRepository(object):
                     )] if user.get_user_email() in dictUserShop else []
                     dictUserShop[user.get_user_email(
                     )] = currentShopList + [int(user.get_shop_id())]
+                
+                dictUserName: dict[list[int]] = {}
+                dictUserLastName: dict[list[int]] = {}
+                for user in shops_to_relation:
+                    uEmail = user.get_user_email()
+                    dictUserName[uEmail] = user.get_user_first_names()
+                    dictUserLastName[uEmail] = user.get_user_last_names()
 
                 inserts: list[tuple] = []
                 columns: list = [const.USER_USERNAME, const.USER_PASSWORD, const.USER_ROLE_ID, const.USER_STATUS_ID,
@@ -41,9 +48,10 @@ class UserRepository(object):
                                 suffix='Complete', length=50)
                 i = 0
                 for u in users:
+                    userEmail = u.get_user_email()
                     # Get lower shopId
                     shopId = int(u.get_shop_id())
-                    shopList = dictUserShop[u.get_user_email()] if u.get_user_email() in dictUserShop else None
+                    shopList = dictUserShop[userEmail] if userEmail in dictUserShop else None
 
                     if shopList:
                         shopId = min(shopList)
@@ -54,10 +62,12 @@ class UserRepository(object):
                         bytes(passw, encoding='utf-8'), bcrypt.gensalt(saltRounds))
                     decodehash = hashed.decode("utf-8")
 
-                    
+                    # Get names
+                    firstNames = dictUserName[userEmail] if userEmail in dictUserName else None
+                    lastNames = dictUserLastName[userEmail] if userEmail in dictUserLastName else None
 
-                    newTuple = tuple([u.get_user_email(), decodehash, u.get_user_roleId(), u.get_user_status_id(),
-                                    u.get_user_save_session(), shopId, u.get_user_email(), None, None, dt])
+                    newTuple = tuple([userEmail, decodehash, u.get_user_roleId(), u.get_user_status_id(),
+                                    u.get_user_save_session(), shopId, userEmail, firstNames, lastNames, dt])
 
                     inserts.append(newTuple)
                     printProgressBar(i + 1, usersLength,
